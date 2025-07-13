@@ -11,15 +11,31 @@ const MessageInput = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+    if (!file) return;
+
     if (!file.type.startsWith("image/")) {
       toast.error("Please select an image file");
       return;
     }
 
+    // Check file size (15MB limit)
+    const maxSize = 15 * 1024 * 1024; // 15MB in bytes
+    if (file.size > maxSize) {
+      toast.error("Image size must be less than 15MB");
+      return;
+    }
+
     const reader = new FileReader();
+    
     reader.onloadend = () => {
       setImagePreview(reader.result);
+      toast.success("Image loaded successfully");
     };
+    
+    reader.onerror = () => {
+      toast.error("Failed to read the image file");
+    };
+    
     reader.readAsDataURL(file);
   };
 
@@ -42,8 +58,14 @@ const MessageInput = () => {
       setText("");
       setImagePreview(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
+      
+      // Success feedback for image messages
+      if (imagePreview) {
+        toast.success("Message with image sent successfully");
+      }
     } catch (error) {
       console.error("Failed to send message:", error);
+      toast.error("Failed to send message. Please try again.");
     }
   };
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Camera, Mail, User } from "lucide-react";
+import toast from "react-hot-toast";
 
 const ProfilePage = () => {
   const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
@@ -10,15 +11,39 @@ const ProfilePage = () => {
     const file = e.target.files[0];
     if (!file) return;
 
+    // Check if file is an image
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+
+    // Check file size (15MB limit)
+    const maxSize = 15 * 1024 * 1024; // 15MB in bytes
+    if (file.size > maxSize) {
+      toast.error("Image size must be less than 15MB");
+      return;
+    }
+
     const reader = new FileReader();
 
-    reader.readAsDataURL(file);
-
     reader.onload = async () => {
-      const base64Image = reader.result;
-      setSelectedImg(base64Image);
-      await updateProfile({ profilePicture: base64Image });
+      try {
+        const base64Image = reader.result;
+        setSelectedImg(base64Image);
+        await updateProfile({ profilePicture: base64Image });
+        // Success toast is handled in the store
+      } catch (error) {
+        console.error("Profile update error:", error);
+        setSelectedImg(null); // Reset preview on error
+        toast.error("Failed to update profile picture");
+      }
     };
+
+    reader.onerror = () => {
+      toast.error("Failed to read the image file");
+    };
+
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -61,7 +86,7 @@ const ProfilePage = () => {
               </label>
             </div>
             <p className="text-sm text-zinc-400">
-              {isUpdatingProfile ? "Uploading..." : "Click the camera icon to update your photo"}
+              {isUpdatingProfile ? "Uploading..." : "Click the camera icon to update your photo (Max: 15MB)"}
             </p>
           </div>
 

@@ -16,7 +16,9 @@ dotenv.config();
 const PORT = process.env.PORT;
 const __dirname = path.resolve();
 
-app.use(express.json());
+// Increase payload limit to handle large base64 images (15MB * 1.37 for base64 encoding overhead)
+app.use(express.json({ limit: '20mb' }));
+app.use(express.urlencoded({ limit: '20mb', extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
