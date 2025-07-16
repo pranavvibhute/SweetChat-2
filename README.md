@@ -1,6 +1,6 @@
 # 🍬 SweetChat - Real-time Messaging App
 
-![SweetChat Screenshot](./frontend/public/screenshot-for-readme.png)
+
 
 **SweetChat** is a modern, full-stack, real-time chat application designed for seamless and instant communication. It features a clean, responsive user interface with both light and dark modes, robust user authentication, and the ability to share images within conversations.
 
