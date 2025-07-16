@@ -6,6 +6,13 @@
 
 ---
 
+## 📸 PREVIEW
+![Homepage Screenshot](screenshots/login.png)
+![Homepage Screenshot](screenshots/chat.png)
+![Homepage Screenshot](screenshots/profile.png)
+![Homepage Screenshot](screenshots/themes.png)
+
+
 ## ✨ Features
 
 - **Real-time Messaging**: Instant message delivery and updates using **Socket.IO**.
